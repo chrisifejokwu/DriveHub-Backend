@@ -1,12 +1,27 @@
+import { get } from 'http';
 import mongoose from 'mongoose';
 
+export interface Booking {
+    id: string;
+    carId: string;
+    userId: string;
+    dateTime: Date;
+    status: 'pending' | 'confirmed' | 'completed';
+}
 
 const bookingSchema = new mongoose.Schema({
-carId: { type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true },
-userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-dateTime: { type: Date, required: true },
-status: { type: String, enum: ['pending', 'confirmed', 'completed'], default: 'pending' }
+    id: { type: String, required: true, unique: true, default: () => new mongoose.Types.ObjectId().toString() },
+    carId: { type: String, required: true },
+    userId: { type: String, required: true },
+    dateTime: { type: Date, required: true },
+    status: { type: String, enum: ['pending', 'confirmed', 'completed'], default: 'pending' }
 }, { timestamps: true });
 
 
-export default mongoose.model('Booking', bookingSchema);
+const BookingDbModel = mongoose.model('Booking', bookingSchema);
+
+export { BookingDbModel };
+
+
+
+

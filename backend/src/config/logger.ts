@@ -1,54 +1,37 @@
-import pino from 'pino';
-import { Logger } from 'seq-logging';
-
-
-
-const seq = new Logger({
-	serverUrl: process.env.SEQ_SERVER_URL,
-	apiKey: process.env.SEQ_API_KEY || undefined,
-	onError: (err: Error) => {
-		console.error('Seq Logger Error:', err);
-	}
+import fs from 'fs';
+import winston from 'winston';
+// import SeqHttpTransport from '../providers/auth/logger_transports/seq';
+// Ensure directories exist
+['logs/logs', 'logs/errors'].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
 });
 
+const currentDate = new Date();
+const dataString = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+const logFile = `logs/logs/${dataString}.txt`;
+const errorFile = `logs/errors/${dataString}.txt`;
 
-const logger = pino({
-level: 'info',
-transport: {
-target: 'pino-pretty',
-options: { colorize: true }
-}
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'Express-api-demo' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize({ all: true }),
+        winston.format.simple()
+      ),
+    }),
+    // new winston.transports.File({ filename: logFile, level: 'info' }),
+    new winston.transports.File({ filename: errorFile, level: 'error' }),
+    // new SeqHttpTransport({
+    //   serverUrl: process.env.SEQ_SERVER_URL as string,
+    //   apiKey: '', // optional
+    // }),
+  ],
 });
-
-
-// pipe pino messages to seq
-const originalInfo = logger.info.bind(logger);
-logger.info = function (...args: any[]) {
-	let obj: any = {};
-	let msg: string = '';
-	if (typeof args[0] === 'string') {
-		msg = args[0];
-	} else {
-		obj = args[0];
-		msg = args[1] || '';
-	}
-	seq.emit({ timestamp: new Date(), level: 'Information', messageTemplate: msg, properties: obj });
-	return originalInfo(...args);
-};
-
-
-logger.error = ((orig) => (...args: any[]) => {
-	let obj: any = {};
-	let msg: string = '';
-	if (typeof args[0] === 'string') {
-		msg = args[0];
-	} else {
-		obj = args[0];
-		msg = args[1] || '';
-	}
-	seq.emit({ timestamp: new Date(), level: 'Error', messageTemplate: msg, properties: obj });
-	return orig(...args);
-})(logger.error.bind(logger));
-
 
 export default logger;
+

@@ -1,8 +1,5 @@
-import logger from '../config/logger.js';
+import { NextFunction, Request,Response } from "express";
 
-
-export const errorHandler = (err, req, res, next) => { // eslint-disable-line
-logger.error({ err: err.message, stack: err.stack }, 'Unhandled error');
-const status = err.status || 500;
-res.status(status).json({ message: err.message || 'Server error' });
-};
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    res.json({message:err.message}).status(400)
+}
