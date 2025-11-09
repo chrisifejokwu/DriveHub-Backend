@@ -1,1 +1,0 @@
-{"version":3,"file":"Payment.d.ts","sourceRoot":"","sources":["../../src/models/Payment.ts"],"names":[],"mappings":"AACA,OAAO,QAAQ,MAAM,UAAU,CAAC;AAEhC,MAAM,WAAW,OAAO;IACpB,EAAE,EAAE,MAAM,CAAC;IACX,MAAM,EAAE,MAAM,CAAC;IACf,MAAM,EAAE,MAAM,CAAC;IACf,MAAM,EAAE,MAAM,CAAC;CAClB;AASD,QAAA,MAAM,cAAc;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GAA4C,CAAC;AAEjE,OAAO,EAAE,cAAc,EAAC,CAAC"}

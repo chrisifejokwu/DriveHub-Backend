@@ -2,16 +2,16 @@ import fs from 'fs';
 import winston from 'winston';
 
 // Ensure directories exist
-['logs/logs', 'logs/errors'].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
+// ['logs/logs', 'logs/errors'].forEach(dir => {
+//   if (!fs.existsSync(dir)) {
+//     fs.mkdirSync(dir, { recursive: true });
+//   }
+// });
 
 const currentDate = new Date();
 const dataString = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-const logFile = `logs/logs/${dataString}.txt`;
-const errorFile = `logs/errors/${dataString}.txt`;
+// const logFile = `logs/logs/${dataString}.txt`;
+// const errorFile = `logs/errors/${dataString}.txt`;
 
 const logger = winston.createLogger({
   level: 'info',
@@ -25,7 +25,7 @@ const logger = winston.createLogger({
       ),
     }),
     // new winston.transports.File({ filename: logFile, level: 'info' }),
-    new winston.transports.File({ filename: errorFile, level: 'error' }),
+    // new winston.transports.File({ filename: errorFile, level: 'error' }),
    
   ],
 });
